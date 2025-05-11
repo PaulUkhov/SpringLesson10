@@ -59,7 +59,7 @@ class OrderFlowIntegrationTest {
     @Test
     void testPaymentWithoutReservationFails() {
         webTestClient.post().uri("/payment/pay")
-                .bodyValue(Map.of("productId", 2, "amount", 100.0))
+                .bodyValue(Map.of("productId", productId2, "amount", 100.0))
                 .exchange()
                 .expectStatus().isBadRequest()
                 .expectBody()
@@ -70,7 +70,7 @@ class OrderFlowIntegrationTest {
     @Test
     void testReserveWithInsufficientStockFails() {
         webTestClient.post().uri("/warehouse/reserve")
-                .bodyValue(Map.of("productId", 3, "quantity", 9999))
+                .bodyValue(Map.of("productId", productId3, "quantity", 9999))
                 .exchange()
                 .expectStatus().isBadRequest()
                 .expectBody()
@@ -82,13 +82,13 @@ class OrderFlowIntegrationTest {
     void testDoubleReservationFails() {
         // первый раз — успешно
         webTestClient.post().uri("/warehouse/reserve")
-                .bodyValue(Map.of("productId", 4, "quantity", 1))
+                .bodyValue(Map.of("productId", productId4, "quantity", 1))
                 .exchange()
                 .expectStatus().isOk();
 
         // второй раз — ошибка (уже зарезервировано или нехватка)
         webTestClient.post().uri("/warehouse/reserve")
-                .bodyValue(Map.of("productId", 4, "quantity", 1))
+                .bodyValue(Map.of("productId",productId4, "quantity", 1))
                 .exchange()
                 .expectStatus().isBadRequest();
     }
